@@ -1,5 +1,6 @@
 package com.meridian;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class App {
@@ -35,7 +36,7 @@ public class App {
       Scanner scanner = new Scanner(System.in);
       String userInput = scanner.nextLine();
       scanner.close();
-      
+
       if (!userInput.equals("")) {
          String[] parts = userInput.split(" ");
          performOperation(parts);
@@ -47,10 +48,24 @@ public class App {
 
    private static void performOperation(String[] parts) {
       char opCode = opCodeFromString(parts[0]);
-      double leftVal = valueFromWorld(parts[1]);
-      double rightVal = valueFromWorld(parts[2]);
-      double result = execute(leftVal, rightVal, opCode);
-      displayResult(opCode, leftVal, rightVal, result);
+      if (opCode == 'w') {
+         handleWhen(parts);
+      }
+      else {
+         double leftVal = valueFromWorld(parts[1]);
+         double rightVal = valueFromWorld(parts[2]);
+         double result = execute(leftVal, rightVal, opCode);
+         displayResult(opCode, leftVal, rightVal, result);
+      }
+   }
+
+   private static void handleWhen(String[] parts) {
+      LocalDate startDate = LocalDate.parse(parts[1]);
+      long daysToAdd = (long) valueFromWorld(parts[2]);
+      LocalDate newDate = startDate.plusDays(daysToAdd);
+
+      String output = String.format("%s plus %d days is %s", startDate, daysToAdd, newDate);
+      System.out.println(output);
    }
 
    private static void displayResult(char opCode, double leftVal, double rightVal, double result) {
@@ -111,13 +126,17 @@ public class App {
 
    private static double valueFromWorld(String word) {
       String[] numberWords = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
-      double value = 0d;
+      double value = -1d;
 
       for (int index = 0; index < numberWords.length; index++) {
          if (word.equals(numberWords[index])) {
             value = index;
             break;
          }
+      }
+
+      if (value == -1d) {
+         value = Double.parseDouble(word);
       }
 
       return value;
