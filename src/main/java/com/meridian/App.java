@@ -45,7 +45,35 @@ public class App {
       double leftVal = valueFromWorld(parts[1]);
       double rightVal = valueFromWorld(parts[2]);
       double result = execute(leftVal, rightVal, opCode);
-      System.out.println(result);
+      displayResult(opCode, leftVal, rightVal, result);
+   }
+
+   private static void displayResult(char opCode, double leftVal, double rightVal, double result) {
+      char symbol = symbolFromOpCode(opCode);
+      StringBuilder builder = new StringBuilder(20);
+      builder.append(leftVal);
+      builder.append(" ");
+      builder.append(symbol);
+      builder.append(" ");
+      builder.append(rightVal);
+      builder.append(" = ");
+      builder.append(result);
+      String output = builder.toString();
+      System.out.println(output);    
+   }
+
+   private static char symbolFromOpCode(char opCode) {
+      char[] opCodes = {'a', 's', 'm', 'd'};
+      char[] symbols = {'+', '-', '*', '/'};
+      char symbol = ' ';
+      for(int index = 0; index < opCodes.length; index++) {
+         if(opCode == opCodes[index]) {
+            symbol = symbols[index];
+            break;
+         }
+      }
+
+      return symbol;
    }
 
    private static void handleCommandLine(String[] args) {
