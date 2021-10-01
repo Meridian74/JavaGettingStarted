@@ -10,6 +10,9 @@ public class App {
       double[] results = new double[opCodes.length];
 
       if (args.length == 0) {
+         executeInteractively();
+      }
+      else if (args.length == 1 && args[0].equals("test")) {
          for (int i = 0; i < opCodes.length; i++) {
             results[i] = execute(leftVals[i], rightVals[i], opCodes[i]);
          } 
@@ -17,10 +20,6 @@ public class App {
          for (double currentResult : results) {
             System.out.println(currentResult);
          }
-
-      }
-      else if (args.length == 1 && args[0].equals("interactive")) {
-         executeInteractively();
       }
       else if (args.length == 3) {
          handleCommandLine(args);
@@ -35,9 +34,15 @@ public class App {
       System.out.println("Enter an operation and two numbers:");
       Scanner scanner = new Scanner(System.in);
       String userInput = scanner.nextLine();
-      String[] parts = userInput.split(" ");
-      performOperation(parts);
       scanner.close();
+      
+      if (!userInput.equals("")) {
+         String[] parts = userInput.split(" ");
+         performOperation(parts);
+      }
+      else {
+         System.out.println("Empty operation data not acceptable!");
+      }
    }
 
    private static void performOperation(String[] parts) {
@@ -50,15 +55,7 @@ public class App {
 
    private static void displayResult(char opCode, double leftVal, double rightVal, double result) {
       char symbol = symbolFromOpCode(opCode);
-      StringBuilder builder = new StringBuilder(20);
-      builder.append(leftVal);
-      builder.append(" ");
-      builder.append(symbol);
-      builder.append(" ");
-      builder.append(rightVal);
-      builder.append(" = ");
-      builder.append(result);
-      String output = builder.toString();
+      String output = String.format("%.3f %c %.3f = %.3f", leftVal, symbol, rightVal, result);
       System.out.println(output);    
    }
 
