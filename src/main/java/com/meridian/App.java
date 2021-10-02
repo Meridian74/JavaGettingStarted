@@ -5,32 +5,25 @@ import java.util.Scanner;
 
 public class App {
    public static void main(String[] args) {
-      double[] leftVals = { 100.0d, 25.0d, 225.0d, 11.0d };
-      double[] rightVals = { 50.0d, 92.0d, 17.0d, 3.0d };
-      char[] opCodes = { 'd', 'a', 's', 'm' };
-      double[] results = new double[opCodes.length];
-
       if (args.length == 0) {
          executeInteractively();
-      }
-      else if (args.length == 1 && args[0].equals("test")) {
-         for (int i = 0; i < opCodes.length; i++) {
-            results[i] = execute(leftVals[i], rightVals[i], opCodes[i]);
-         } 
-         
-         for (double currentResult : results) {
-            System.out.println(currentResult);
-         }
-      }
-      else if (args.length == 3) {
-         handleCommandLine(args);
-      } 
-      else {
-         System.out.println("Please provide an operation code and 2 numeric values");
-      }
 
+      } else if (args.length == 1 && args[0].equals("test")) {
+         MathEquation[] equations = new MathEquation[4];
+         equations[0] = create(100.0d, 50.0d, 'd');
+         equations[1] = create(25.0d, 92.0d, 'a');
+         equations[2] = create(225.0d, 17.0d, 's');
+         equations[3] = create(11.0d, 3.0d, 'm');
+
+      } else if (args.length == 3) {
+         handleCommandLine(args);
+
+      } else {
+         System.out.println("Please provide an operation code and 2 numeric values");
+
+      }
    }
-   
+
    private static void executeInteractively() {
       System.out.println("Enter an operation and two numbers:");
       Scanner scanner = new Scanner(System.in);
@@ -50,13 +43,22 @@ public class App {
       char opCode = opCodeFromString(parts[0]);
       if (opCode == 'w') {
          handleWhen(parts);
-      }
-      else {
+      } else {
          double leftVal = valueFromWorld(parts[1]);
          double rightVal = valueFromWorld(parts[2]);
-         double result = execute(leftVal, rightVal, opCode);
-         displayResult(opCode, leftVal, rightVal, result);
+         MathEquation equation = create(leftVal, rightVal, opCode);
+         equation.execute();
+         displayResult(leftVal, rightVal, opCode, equation.getResult());
       }
+   }
+
+   private static void handleCommandLine(String[] args) {
+      char opCode = args[0].charAt(0);
+      double leftVal = Double.parseDouble(args[1]);
+      double rightVal = Double.parseDouble(args[2]);
+      MathEquation equation = create(leftVal, rightVal, opCode);
+      equation.execute();
+      displayResult(leftVal, rightVal, opCode, equation.getResult());
    }
 
    private static void handleWhen(String[] parts) {
@@ -68,7 +70,16 @@ public class App {
       System.out.println(output);
    }
 
-   private static void displayResult(char opCode, double leftVal, double rightVal, double result) {
+   private static MathEquation create(double leftVal, double rightVal, char opCode) {
+      MathEquation equation = new MathEquation();
+      equation.setLeftVal(leftVal);
+      equation.setRightVal(rightVal);
+      equation.setOpCode(opCode);
+      equation.execute();
+      return equation;
+   }
+
+   private static void displayResult(double leftVal, double rightVal, char opCode, double result) {
       char symbol = symbolFromOpCode(opCode);
       String output = String.format("%.3f %c %.3f = %.3f", leftVal, symbol, rightVal, result);
       System.out.println(output);    
@@ -76,47 +87,17 @@ public class App {
 
    private static char symbolFromOpCode(char opCode) {
       char[] opCodes = {'a', 's', 'm', 'd'};
-      char[] symbols = {'+', '-', '*', '/'};
+      char[] symbols = { '+', '-', '*', '/' };
       char symbol = ' ';
-      for(int index = 0; index < opCodes.length; index++) {
-         if(opCode == opCodes[index]) {
+
+      for (int index = 0; index < opCodes.length; index++) {
+         if (opCode == opCodes[index]) {
             symbol = symbols[index];
             break;
          }
       }
-
+      
       return symbol;
-   }
-
-   private static void handleCommandLine(String[] args) {
-      char opCode = args[0].charAt(0);
-      double leftVal = Double.parseDouble(args[1]);
-      double rightVal = Double.parseDouble(args[2]);
-      double result = execute(leftVal, rightVal, opCode);
-      System.out.println(result);
-   }
-
-   private static double execute(double leftVal, double rightVal, char opCode) {
-      double result;
-      switch (opCode) {
-         case 'a':
-            result = leftVal + rightVal;
-            break;
-         case 's':
-            result = leftVal - rightVal;
-            break;
-         case 'm':
-            result = leftVal * rightVal;
-            break;
-         case 'd':
-            result = rightVal != 0 ? leftVal / rightVal : 0.0d;
-            break;
-         default:
-            System.out.println("Invalid opCode: " + opCode);
-            result = 0.0d;
-            break;
-      }
-      return result;
    }
 
    private static char opCodeFromString(String operationName) {
@@ -141,5 +122,4 @@ public class App {
 
       return value;
    }
-
 }
