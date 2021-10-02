@@ -10,23 +10,33 @@ public class MathEquation {
    public MathEquation() {
    }
 
+   public MathEquation(char opCode) {
+      this.opCode = opCode;
+   }
+
+   public MathEquation(double leftVal, double rightVal, char opCode) {
+      this(opCode);
+      this.leftVal = leftVal;
+      this.rightVal = rightVal;
+   }
+
    public void execute() {
       switch (opCode) {
          case 'a':
-            this.result = leftVal + rightVal;
+            result = leftVal + rightVal;
             break;
          case 's':
-            this.result = leftVal - rightVal;
+            result = leftVal - rightVal;
             break;
          case 'm':
-            this.result = leftVal * rightVal;
+            result = leftVal * rightVal;
             break;
          case 'd':
-            this.result = rightVal != 0 ? leftVal / rightVal : 0.0d;
+            result = rightVal != 0 ? leftVal / rightVal : 0.0d;
             break;
          default:
             System.out.println("Invalid opCode: " + opCode);
-            this.result = 0.0d;
+            result = 0.0d;
             break;
       }
    }
@@ -59,5 +69,4 @@ public class MathEquation {
       return result;
    }
 
-   
 }

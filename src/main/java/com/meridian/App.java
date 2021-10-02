@@ -9,11 +9,7 @@ public class App {
          executeInteractively();
 
       } else if (args.length == 1 && args[0].equals("test")) {
-         MathEquation[] equations = new MathEquation[4];
-         equations[0] = create(100.0d, 50.0d, 'd');
-         equations[1] = create(25.0d, 92.0d, 'a');
-         equations[2] = create(225.0d, 17.0d, 's');
-         equations[3] = create(11.0d, 3.0d, 'm');
+         testWithFixArray();
 
       } else if (args.length == 3) {
          handleCommandLine(args);
@@ -21,6 +17,21 @@ public class App {
       } else {
          System.out.println("Please provide an operation code and 2 numeric values");
 
+      }
+   }
+
+   private static void testWithFixArray() {
+      MathEquation[] equations = new MathEquation[4];
+      equations[0] = create(100.0d, 50.0d, 'd');
+      equations[1] = create(25.0d, 92.0d, 'a');
+      equations[2] = create(225.0d, 17.0d, 's');
+      equations[3] = create(11.0d, 3.0d, 'm');
+
+      for (MathEquation equation : equations) {
+         displayResult(equation.getLeftVal(),
+               equation.getRightVal(), 
+               equation.getOpCode(), 
+               equation.getResult());
       }
    }
 
@@ -47,7 +58,6 @@ public class App {
          double leftVal = valueFromWorld(parts[1]);
          double rightVal = valueFromWorld(parts[2]);
          MathEquation equation = create(leftVal, rightVal, opCode);
-         equation.execute();
          displayResult(leftVal, rightVal, opCode, equation.getResult());
       }
    }
@@ -57,7 +67,6 @@ public class App {
       double leftVal = Double.parseDouble(args[1]);
       double rightVal = Double.parseDouble(args[2]);
       MathEquation equation = create(leftVal, rightVal, opCode);
-      equation.execute();
       displayResult(leftVal, rightVal, opCode, equation.getResult());
    }
 
