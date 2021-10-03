@@ -1,18 +1,18 @@
 package com.meridian;
 
 public enum MathOperation {
-   ADD('+'),
-   SUBTRACT('-'),
-   MULTIPLY('*'),
-   DIVIDE('/');
+   ADD("+"),
+   SUBTRACT("-"),
+   MULTIPLY("*"),
+   DIVIDE("/");
 
-   private char symbol;
+   private String symbol;
 
-   private MathOperation(char symbol) {
+   private MathOperation(String symbol) {
       this.symbol = symbol;
    }
 
-   public char getSymbol() {
+   public String getSymbol() {
       return this.symbol;
    }
 }
