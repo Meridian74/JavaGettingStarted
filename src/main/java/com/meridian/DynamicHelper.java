@@ -27,7 +27,7 @@ public class DynamicHelper {
 
    private void displayResult(double leftVal, double rightVal, String keyword, double result) {
       String operationSymbol = MathOperation.valueOf(keyword.toUpperCase()).getSymbol();
-      String output = String.format("%.2f %s %.2f = %.2f", leftVal, operationSymbol, rightVal, result);
+      String output = String.format("Result of %.2f %s %.2f = %.2f", leftVal, operationSymbol, rightVal, result);
       System.out.println(output);
    }
    
