@@ -1,38 +1,10 @@
 package com.meridian;
 
-import java.time.LocalDate;
 import java.util.Scanner;
 
 public class App {
    public static void main(String[] args) {
-      if (args.length == 0) {
-         executeInteractively();
-
-      } else if (args.length == 1 && args[0].equals("test")) {
-         testWithFixArray();
-
-      } else if (args.length == 3) {
-         handleCommandLine(args);
-
-      } else {
-         System.out.println("Please provide an operation code and 2 numeric values");
-
-      }
-   }
-
-   private static void testWithFixArray() {
-      MathEquation[] equations = new MathEquation[4];
-      equations[0] = create(100.0d, 50.0d, 'd');
-      equations[1] = create(25.0d, 92.0d, 'a');
-      equations[2] = create(225.0d, 17.0d, 's');
-      equations[3] = create(11.0d, 3.0d, 'm');
-
-      for (MathEquation equation : equations) {
-         displayResult(equation.getLeftVal(),
-               equation.getRightVal(), 
-               equation.getOpCode(), 
-               equation.getResult());
-      }
+      executeInteractively();
    }
 
    private static void executeInteractively() {
@@ -51,67 +23,49 @@ public class App {
    }
 
    private static void performOperation(String[] parts) {
-      char opCode = opCodeFromString(parts[0]);
-      if (opCode == 'w') {
-         handleWhen(parts);
-      } else {
-         double leftVal = valueFromWorld(parts[1]);
-         double rightVal = valueFromWorld(parts[2]);
-         MathEquation equation = create(leftVal, rightVal, opCode);
-         displayResult(leftVal, rightVal, opCode, equation.getResult());
+      MathOperation operation = MathOperation.valueOf(parts[0].toUpperCase());
+      double leftVal = valueFromWorld(parts[1]);
+      double rightVal = valueFromWorld(parts[2]);
+
+      CalculateBase calculation = createCalculation(operation, leftVal, rightVal);
+      calculation.calculate();
+
+      displayResult(leftVal, rightVal, operation, calculation.getResult());
+   }
+
+   private static CalculateBase createCalculation(MathOperation operation, double leftVal, double rightVal) {
+      CalculateBase calculation = null;
+
+      switch (operation) {
+         case ADD:
+            calculation = new Adder(leftVal, rightVal);
+            break;
+
+         case SUBTRACT:
+            calculation = new Subtracter(leftVal, rightVal);
+            break;
+
+         case MULTIPLY:
+            calculation = new Multiplier(leftVal, rightVal);
+            break;
+
+         case DIVIDE:
+            calculation = new Divider(leftVal, rightVal);
+            break;
       }
+
+      return calculation;
    }
 
-   private static void handleCommandLine(String[] args) {
-      char opCode = args[0].charAt(0);
-      double leftVal = Double.parseDouble(args[1]);
-      double rightVal = Double.parseDouble(args[2]);
-      MathEquation equation = create(leftVal, rightVal, opCode);
-      displayResult(leftVal, rightVal, opCode, equation.getResult());
-   }
-
-   private static void handleWhen(String[] parts) {
-      LocalDate startDate = LocalDate.parse(parts[1]);
-      long daysToAdd = (long) valueFromWorld(parts[2]);
-      LocalDate newDate = startDate.plusDays(daysToAdd);
-
-      String output = String.format("%s plus %d days is %s", startDate, daysToAdd, newDate);
-      System.out.println(output);
-   }
-
-   private static MathEquation create(double leftVal, double rightVal, char opCode) {
-      MathEquation equation = new MathEquation();
-      equation.setLeftVal(leftVal);
-      equation.setRightVal(rightVal);
-      equation.setOpCode(opCode);
-      equation.execute();
-      return equation;
-   }
-
-   private static void displayResult(double leftVal, double rightVal, char opCode, double result) {
-      char symbol = symbolFromOpCode(opCode);
-      String output = String.format("%.3f %c %.3f = %.3f", leftVal, symbol, rightVal, result);
+   private static void displayResult(double leftVal, double rightVal, MathOperation operation, double result) {
+      char symbol = symbolOfOperation(operation);
+      String output = String.format("%.2f %c %.2f = %.2f", leftVal, symbol, rightVal, result);
       System.out.println(output);    
    }
 
-   private static char symbolFromOpCode(char opCode) {
-      char[] opCodes = {'a', 's', 'm', 'd'};
+   private static char symbolOfOperation(MathOperation operation) {
       char[] symbols = { '+', '-', '*', '/' };
-      char symbol = ' ';
-
-      for (int index = 0; index < opCodes.length; index++) {
-         if (opCode == opCodes[index]) {
-            symbol = symbols[index];
-            break;
-         }
-      }
-      
-      return symbol;
-   }
-
-   private static char opCodeFromString(String operationName) {
-      char opCode = operationName.charAt(0);
-      return opCode;
+      return symbols[operation.ordinal()];
    }
 
    private static double valueFromWorld(String word) {
