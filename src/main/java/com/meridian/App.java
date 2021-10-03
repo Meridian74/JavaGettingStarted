@@ -58,14 +58,9 @@ public class App {
    }
 
    private static void displayResult(double leftVal, double rightVal, MathOperation operation, double result) {
-      char symbol = symbolOfOperation(operation);
+      char symbol = operation.getSymbol();
       String output = String.format("%.2f %c %.2f = %.2f", leftVal, symbol, rightVal, result);
       System.out.println(output);    
-   }
-
-   private static char symbolOfOperation(MathOperation operation) {
-      char[] symbols = { '+', '-', '*', '/' };
-      return symbols[operation.ordinal()];
    }
 
    private static double valueFromWorld(String word) {
