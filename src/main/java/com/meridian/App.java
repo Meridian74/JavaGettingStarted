@@ -8,11 +8,14 @@ public class App {
    }
 
    private static void executeInteractively() {
+
+      // if you extend this array (feature list) do not forget to set MathOperation Enum as well
       DynamicHelper helper = new DynamicHelper(new MathProcessing[] { 
             new Adder(),
             new Subtracter(),
             new Multiplier(),
-            new Divider() 
+            new Divider(),
+            new PowerOf() 
          });
 
       System.out.println("Enter an operation and two numbers:");

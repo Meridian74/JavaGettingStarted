@@ -4,7 +4,8 @@ public enum MathOperation {
    ADD("+"),
    SUBTRACT("-"),
    MULTIPLY("*"),
-   DIVIDE("/");
+   DIVIDE("/"),
+   POWER("^");
 
    private String symbol;
 
